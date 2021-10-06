@@ -5,6 +5,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 
+	"mahasiswa/helpers"
 	"mahasiswa/schemas"
 	"mahasiswa/services"
 )
@@ -45,17 +46,17 @@ func (h *handlerStudent) CreateHandlerStudent(ctx *gin.Context) {
 		return
 	}
 
-	_, errorCode := h.service.CreateServiceStudent(&input)
+	res, errorCode := h.service.CreateServiceStudent(&input)
 
 	switch errorCode {
 	case 409:
-		ctx.AbortWithStatusJSON(http.StatusConflict, gin.H{"message": "Npm already taken"})
+		helpers.APIErrorResponse(ctx, http.StatusConflict, "Npm already taken", res)
 		return
 	case 403:
-		ctx.AbortWithStatusJSON(http.StatusForbidden, gin.H{"message": "Create new student failed"})
+		helpers.APIErrorResponse(ctx, http.StatusForbidden, "Create new student failed", res)
 		return
 	default:
-		ctx.JSON(http.StatusOK, gin.H{"message": "Create new student success"})
+		helpers.APISuccessResponse(ctx, http.StatusCreated, "Create new student success", nil)
 	}
 }
 
@@ -70,10 +71,10 @@ func (h *handlerStudent) ResultsHadlerStudent(ctx *gin.Context) {
 
 	switch errorCode {
 	case 404:
-		ctx.AbortWithStatusJSON(http.StatusNotFound, gin.H{"message": "Student data not found"})
+		helpers.APIErrorResponse(ctx, http.StatusNotFound, "Student data not found", res)
 		return
 	default:
-		ctx.JSON(http.StatusOK, gin.H{"message": "Already Ok", "data": res})
+		helpers.APISuccessResponse(ctx, http.StatusOK, "Already OK", res)
 	}
 }
 

@@ -18,7 +18,7 @@ import (
 
 type RepositoryStudent interface {
 	CreateRepositoryStudent(input *schemas.Student) (*models.Student, interface{})
-	ResultsRepositoryStudent() (*models.Student, interface{})
+	ResultsRepositoryStudent() (*[]models.Student, interface{})
 	ResultRepositoryStudent(input *schemas.Student) (*models.Student, interface{})
 	DeleteRepositoryStudent(input *schemas.Student) (*models.Student, interface{})
 	UpdateRepositoryStudent(input *schemas.Student) (*models.Student, interface{})
@@ -87,8 +87,8 @@ func (r *repositoryStudent) CreateRepositoryStudent(input *schemas.Student) (*mo
 * ========================
  */
 
-func (r *repositoryStudent) ResultsRepositoryStudent() (*models.Student, interface{}) {
-	var students models.Student
+func (r *repositoryStudent) ResultsRepositoryStudent() (*[]models.Student, interface{}) {
+	var students []models.Student
 
 	errorCode := make(chan int, 1)
 

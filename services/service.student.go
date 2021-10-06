@@ -14,7 +14,7 @@ import (
 
 type ServiceStudent interface {
 	CreateServiceStudent(input *schemas.Student) (*models.Student, interface{})
-	ResultsServiceStudent() (*models.Student, interface{})
+	ResultsServiceStudent() (*[]models.Student, interface{})
 	ResultServiceStudent(input *schemas.Student) (*models.Student, interface{})
 	DeleteServiceStudent(input *schemas.Student) (*models.Student, interface{})
 	UpdateServiceStudent(input *schemas.Student) (*models.Student, interface{})
@@ -64,7 +64,7 @@ func (s *serviceStudent) CreateServiceStudent(input *schemas.Student) (*models.S
 * ========================
  */
 
-func (s *serviceStudent) ResultsServiceStudent() (*models.Student, interface{}) {
+func (s *serviceStudent) ResultsServiceStudent() (*[]models.Student, interface{}) {
 	res, err := s.repository.ResultsRepositoryStudent()
 	return res, err
 }

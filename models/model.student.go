@@ -8,12 +8,11 @@ import (
 
 type Student struct {
 	gorm.Model
-	Name      string `gorm:"type:varchar;not null"`
-	Npm       uint64 `gorm:"type:bigint;not null"`
-	Fak       string `gorm:"type:varchar;not null"`
-	Bid       string `gorm:"type:varchar;not null"`
-	TeacherId uint
-	Teacher   Teacher `gorm:"foreignKey:TeacherId"`
+	Name     string      `gorm:"type:varchar;not null"`
+	Npm      uint64      `gorm:"type:bigint;not null"`
+	Fak      string      `gorm:"type:varchar;not null"`
+	Bid      string      `gorm:"type:varchar;not null"`
+	Teachers interface{} `gorm:"type:json"`
 }
 
 func (m *Student) BeforeCreate() {

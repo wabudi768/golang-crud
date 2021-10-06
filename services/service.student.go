@@ -1,6 +1,7 @@
 package services
 
 import (
+	"mahasiswa/helpers"
 	"mahasiswa/models"
 	"mahasiswa/repositorys"
 	"mahasiswa/schemas"
@@ -52,7 +53,7 @@ func (s *serviceStudent) CreateServiceStudent(input *schemas.Student) (*models.S
 	student.Npm = input.Npm
 	student.Fak = input.Fak
 	student.Bid = input.Bid
-	student.TeacherId = input.TeacherId
+	student.Teachers = helpers.Stringify(input.Teachers)
 
 	res, err := s.repository.CreateRepositoryStudent(&student)
 	return res, err
@@ -110,7 +111,7 @@ func (s *serviceStudent) UpdateServiceStudent(input *schemas.Student) (*models.S
 	student.Npm = input.Npm
 	student.Fak = input.Fak
 	student.Bid = input.Bid
-	student.TeacherId = input.TeacherId
+	student.Teachers = input.Teachers
 
 	res, err := s.repository.UpdateRepositoryStudent(&student)
 	return res, err

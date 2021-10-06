@@ -52,6 +52,7 @@ func (s *serviceStudent) CreateServiceStudent(input *schemas.Student) (*models.S
 	student.Npm = input.Npm
 	student.Fak = input.Fak
 	student.Bid = input.Bid
+	student.TeacherId = input.TeacherId
 
 	res, err := s.repository.CreateRepositoryStudent(&student)
 	return res, err
@@ -76,11 +77,7 @@ func (s *serviceStudent) ResultsServiceStudent() (*models.Student, interface{}) 
 
 func (s *serviceStudent) ResultServiceStudent(input *schemas.Student) (*models.Student, interface{}) {
 	var student schemas.Student
-	student.Name = input.Name
-	student.Npm = input.Npm
-	student.Fak = input.Fak
-	student.Bid = input.Bid
-	student.TeacherId = input.TeacherId
+	student.ID = input.ID
 
 	res, err := s.repository.ResultRepositoryStudent(&student)
 	return res, err
@@ -113,6 +110,7 @@ func (s *serviceStudent) UpdateServiceStudent(input *schemas.Student) (*models.S
 	student.Npm = input.Npm
 	student.Fak = input.Fak
 	student.Bid = input.Bid
+	student.TeacherId = input.TeacherId
 
 	res, err := s.repository.UpdateRepositoryStudent(&student)
 	return res, err

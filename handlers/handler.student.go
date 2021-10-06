@@ -45,17 +45,17 @@ func (h *handlerStudent) CreateHandlerStudent(ctx *gin.Context) {
 		return
 	}
 
-	res, errorCode := h.service.CreateServiceStudent(&input)
+	_, errorCode := h.service.CreateServiceStudent(&input)
 
 	switch errorCode {
 	case 409:
-		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"message": "Npm already taken", "data": nil})
+		ctx.AbortWithStatusJSON(http.StatusConflict, gin.H{"message": "Npm already taken"})
 		return
 	case 403:
-		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"message": "Create new student failed", "data": nil})
+		ctx.AbortWithStatusJSON(http.StatusForbidden, gin.H{"message": "Create new student failed"})
 		return
 	default:
-		ctx.JSON(http.StatusOK, gin.H{"message": "Create new student success", "data": res})
+		ctx.JSON(http.StatusOK, gin.H{"message": "Create new student success"})
 	}
 }
 

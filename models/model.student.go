@@ -12,8 +12,8 @@ type Student struct {
 	Npm       uint64 `gorm:"type:bigint;not null"`
 	Fak       string `gorm:"type:varchar;not null"`
 	Bid       string `gorm:"type:varchar;not null"`
-	TeacherId uint   `gorm:"index;not null;unique"`
-	Teacher   Teacher
+	TeacherId uint
+	Teacher   Teacher `gorm:"foreignKey:TeacherId"`
 }
 
 func (m *Student) BeforeCreate() {

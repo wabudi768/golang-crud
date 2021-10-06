@@ -45,17 +45,17 @@ func (h *handlerTeacher) CreateHandlerTeacher(ctx *gin.Context) {
 		return
 	}
 
-	res, errorCode := h.service.CreateServiceTeacher(&input)
+	_, errorCode := h.service.CreateServiceTeacher(&input)
 
 	switch errorCode {
 	case 409:
-		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"message": "Name already taken", "data": nil})
+		ctx.AbortWithStatusJSON(http.StatusConflict, gin.H{"message": "Name already taken"})
 		return
 	case 403:
-		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"message": "Create new teacher failed", "data": nil})
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"message": "Create new teacher failed"})
 		return
 	default:
-		ctx.JSON(http.StatusOK, gin.H{"message": "Create new teacher success", "data": res})
+		ctx.JSON(http.StatusOK, gin.H{"message": "Create new teacher success"})
 	}
 }
 

@@ -3,5 +3,5 @@ package schemas
 type Teacher struct {
 	ID     uint   `json:"id"`
 	Name   string `json:"name"`
-	Matkul string `json:"mata_kuliah"`
+	Matkul string `json:"matkul"`
 }

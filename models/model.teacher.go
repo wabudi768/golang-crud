@@ -2,14 +2,14 @@ package models
 
 import (
 	"time"
+
+	"gorm.io/gorm"
 )
 
 type Teacher struct {
-	ID        uint   `gorm:"primary_key:auto_increment:unique"`
-	Name      string `gorm:"type:varchar; not null"`
-	Matkul    string `gorm:"type:varchar; not null"`
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	gorm.Model
+	Name   string `gorm:"type:varchar;not null"`
+	Matkul string `gorm:"type:varchar;not null"`
 }
 
 func (m *Teacher) BeforeCreate() {

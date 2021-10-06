@@ -80,6 +80,7 @@ func (s *serviceStudent) ResultServiceStudent(input *schemas.Student) (*models.S
 	student.Npm = input.Npm
 	student.Fak = input.Fak
 	student.Bid = input.Bid
+	student.TeacherId = input.TeacherId
 
 	res, err := s.repository.ResultRepositoryStudent(&student)
 	return res, err

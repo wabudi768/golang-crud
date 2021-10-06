@@ -1,6 +1,7 @@
 package repositorys
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/sirupsen/logrus"
@@ -10,6 +11,12 @@ import (
 	"mahasiswa/schemas"
 )
 
+/**
+* =======================================
+* 	Interface Initialize Teacher Method
+* =======================================
+ */
+
 type Repository interface {
 	CreateRepositoryTeacher(input *schemas.Teacher) (*models.Teacher, interface{})
 	ResultsRepositoryTeacher() (*models.Teacher, interface{})
@@ -18,40 +25,66 @@ type Repository interface {
 	UpdateRepositoryTeacher(input *schemas.Teacher) (*models.Teacher, interface{})
 }
 
+/**
+* =======================================
+* 	Struct Initialize Teacher Database
+* =======================================
+ */
+
 type repositoryTeacher struct {
 	db *gorm.DB
 }
+
+/**
+* ============================
+* 	Mandatory Teacher Method
+* ============================
+ */
 
 func NewRepositoryTeacher(db *gorm.DB) *repositoryTeacher {
 	return &repositoryTeacher{db: db}
 }
 
+/**
+* ========================
+* 	Create Student Data
+* ========================
+ */
+
 func (r *repositoryTeacher) CreateRepositoryTeacher(input *schemas.Teacher) (*models.Teacher, interface{}) {
 	var teacher models.Teacher
 	teacher.Name = input.Name
-	teacher.ID = input.ID
+	teacher.Matkul = input.Matkul
+
+	fmt.Printf("debug %v", teacher)
 
 	errorCode := make(chan int, 1)
 
 	db := r.db.Model(&teacher).Begin()
 
-	checkTeacherName := db.Debug().Select("*").Where("name ? =", teacher.Name).Take(&teacher)
+	checkTeacherName := db.Debug().Select("name").Where("name = ?", teacher.Name).Find(&teacher)
 
-	if checkTeacherName.RowsAffected > 1 {
+	if checkTeacherName.RowsAffected > 0 {
 		defer logrus.Error(checkTeacherName.Error)
 		errorCode <- http.StatusConflict
-		return &teacher, errorCode
+		return &teacher, <-errorCode
 	}
 
-	saveTeacher := db.Debug().Create(&teacher).First(&teacher).Commit()
+	saveTeacher := db.Debug().Create(&teacher).Commit().First(&teacher)
 	if saveTeacher.RowsAffected < 1 {
 		defer logrus.Error(saveTeacher.Error)
 		errorCode <- http.StatusForbidden
-		return &teacher, errorCode
+		return &teacher, <-errorCode
 	}
 
 	return &teacher, nil
 }
+
+/**
+* ========================
+* 	Results Student Data
+* ========================
+ */
 
 func (r *repositoryTeacher) ResultsRepositoryTeacher() (*models.Teacher, interface{}) {
 	var teachers models.Teacher
@@ -62,7 +95,7 @@ func (r *repositoryTeacher) ResultsRepositoryTeacher() (*models.Teacher, interfa
 
 	checkTeacher := db.Debug().Select("*").Take(&teachers)
 
-	if checkTeacher.RowsAffected > 1 {
+	if checkTeacher.RowsAffected > 0 {
 		defer logrus.Error(checkTeacher.Error)
 		errorCode <- http.StatusNotFound
 		return &teachers, <-errorCode
@@ -70,6 +103,12 @@ func (r *repositoryTeacher) ResultsRepositoryTeacher() (*models.Teacher, interfa
 
 	return &teachers, nil
 }
+
+/**
+* ========================
+* 	Result Student Data
+* ========================
+ */
 
 func (r *repositoryTeacher) ResultRepositoryTeacher(input *schemas.Teacher) (*models.Teacher, interface{}) {
 	var teacher models.Teacher
@@ -79,7 +118,7 @@ func (r *repositoryTeacher) ResultRepositoryTeacher(input *schemas.Teacher) (*mo
 
 	db := r.db.Model(&teacher).Begin()
 
-	checkTeacherById := db.Debug().Select("*").Where("id ? =", teacher.ID).Take(&teacher)
+	checkTeacherById := db.Debug().Select("*").Where("id = ?", teacher.ID).Take(&teacher)
 
 	if checkTeacherById.RowsAffected < 1 {
 		defer logrus.Error(checkTeacherById.Error)
@@ -90,6 +129,12 @@ func (r *repositoryTeacher) ResultRepositoryTeacher(input *schemas.Teacher) (*mo
 	return &teacher, nil
 }
 
+/**
+* ========================
+* 	Delete Student Data
+* ========================
+ */
+
 func (r *repositoryTeacher) DeleteRepositoryTeacher(input *schemas.Teacher) (*models.Teacher, interface{}) {
 	var teacher models.Teacher
 	teacher.ID = input.ID
@@ -98,7 +143,7 @@ func (r *repositoryTeacher) DeleteRepositoryTeacher(input *schemas.Teacher) (*mo
 
 	db := r.db.Model(&teacher).Begin()
 
-	checkTeacherById := db.Debug().Select("*").Where("id ? =", teacher.ID).Take(&teacher)
+	checkTeacherById := db.Debug().Select("*").Where("id = ?", teacher.ID).Take(&teacher)
 
 	if checkTeacherById.RowsAffected < 1 {
 		defer logrus.Error(checkTeacherById.Error)
@@ -106,7 +151,7 @@ func (r *repositoryTeacher) DeleteRepositoryTeacher(input *schemas.Teacher) (*mo
 		return &teacher, <-errorCode
 	}
 
-	deleteTeacherById := db.Debug().Select("*").Where("id ? =", teacher.ID).Delete(&teacher)
+	deleteTeacherById := db.Debug().Select("*").Where("id = ?", teacher.ID).Delete(&teacher)
 
 	if deleteTeacherById.RowsAffected < 1 {
 		defer logrus.Error(deleteTeacherById.Error)
@@ -117,6 +162,12 @@ func (r *repositoryTeacher) DeleteRepositoryTeacher(input *schemas.Teacher) (*mo
 	return &teacher, nil
 }
 
+/**
+* ========================
+* 	Update Student Data
+* ========================
+ */
+
 func (r *repositoryTeacher) UpdateRepositoryTeacher(input *schemas.Teacher) (*models.Teacher, interface{}) {
 	var teacher models.Teacher
 	teacher.ID = input.ID
@@ -126,7 +177,7 @@ func (r *repositoryTeacher) UpdateRepositoryTeacher(input *schemas.Teacher) (*mo
 
 	db := r.db.Model(&teacher).Begin()
 
-	checkTeacherById := db.Debug().Select("*").Where("id ? =", teacher.ID).Take(&teacher)
+	checkTeacherById := db.Debug().Select("*").Where("id = ?", teacher.ID).Take(&teacher)
 
 	if checkTeacherById.RowsAffected < 1 {
 		defer logrus.Error(checkTeacherById.Error)
@@ -134,7 +185,7 @@ func (r *repositoryTeacher) UpdateRepositoryTeacher(input *schemas.Teacher) (*mo
 		return &teacher, <-errorCode
 	}
 
-	updateTeacher := db.Debug().Select("*").Where("id ? =", teacher.ID).Updates(&teacher)
+	updateTeacher := db.Debug().Select("*").Where("id = ?", teacher.ID).Updates(&teacher)
 
 	if updateTeacher.RowsAffected < 1 {
 		defer logrus.Error(updateTeacher.Error)

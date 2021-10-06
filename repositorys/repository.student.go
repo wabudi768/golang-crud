@@ -56,6 +56,7 @@ func (r *repositoryStudent) CreateRepositoryStudent(input *schemas.Student) (*mo
 	student.Npm = input.Npm
 	student.Fak = input.Fak
 	student.Bid = input.Bid
+	student.TeacherId = input.TeacherId
 
 	errorCode := make(chan int, 1)
 
@@ -101,7 +102,7 @@ func (r *repositoryStudent) ResultsRepositoryStudent() (*models.Student, interfa
 		return &students, <-errorCode
 	}
 
-	return &students, errorCode
+	return &students, nil
 }
 
 /**
@@ -175,7 +176,7 @@ func (r *repositoryStudent) UpdateRepositoryStudent(input *schemas.Student) (*mo
 	student.Npm = input.Npm
 	student.Fak = input.Fak
 	student.Bid = input.Bid
-	// student.Teachers = input.Teachers{}
+	student.TeacherId = input.TeacherId
 
 	errorCode := make(chan int, 1)
 

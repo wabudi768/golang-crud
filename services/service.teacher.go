@@ -47,7 +47,11 @@ func NewServiceTeacher(repository repositorys.Repository) *serviceTeacher {
  */
 
 func (s *serviceTeacher) CreateServiceTeacher(input *schemas.Teacher) (*models.Teacher, interface{}) {
-	res, err := s.repository.CreateRepositoryTeacher(input)
+	var teacher schemas.Teacher
+	teacher.Name = input.Name
+	teacher.Matkul = input.Matkul
+
+	res, err := s.repository.CreateRepositoryTeacher(&teacher)
 	return res, err
 }
 
@@ -69,7 +73,10 @@ func (s *serviceTeacher) ResultsServiceTeacher() (*models.Teacher, interface{}) 
  */
 
 func (s *serviceTeacher) ResultServiceTeacher(input *schemas.Teacher) (*models.Teacher, interface{}) {
-	res, err := s.repository.ResultRepositoryTeacher(input)
+	var teacher schemas.Teacher
+	teacher.ID = input.ID
+
+	res, err := s.repository.ResultRepositoryTeacher(&teacher)
 	return res, err
 }
 
@@ -80,7 +87,10 @@ func (s *serviceTeacher) ResultServiceTeacher(input *schemas.Teacher) (*models.T
  */
 
 func (s *serviceTeacher) DeleteServiceTeacher(input *schemas.Teacher) (*models.Teacher, interface{}) {
-	res, err := s.repository.DeleteRepositoryTeacher(input)
+	var teacher schemas.Teacher
+	teacher.ID = input.ID
+
+	res, err := s.repository.DeleteRepositoryTeacher(&teacher)
 	return res, err
 }
 
@@ -91,6 +101,11 @@ func (s *serviceTeacher) DeleteServiceTeacher(input *schemas.Teacher) (*models.T
  */
 
 func (s *serviceTeacher) UpdateServiceTeacher(input *schemas.Teacher) (*models.Teacher, interface{}) {
+	var teacher schemas.Teacher
+	teacher.ID = input.ID
+	teacher.Name = input.Name
+	teacher.Matkul = input.Matkul
+
 	res, err := s.repository.UpdateRepositoryTeacher(input)
 	return res, err
 }

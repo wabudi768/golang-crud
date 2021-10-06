@@ -58,15 +58,15 @@ func setupDatabase() *gorm.DB {
 	db, err := gorm.Open(postgres.Open(pkg.GodotEnv("PG_URI")), &gorm.Config{})
 
 	if err != nil {
-		defer logrus.Error("Database connection failed")
+		defer logrus.Info("Database connection failed")
 		logrus.Fatal(err)
 		return nil
 	}
 
-	err = db.AutoMigrate(&models.Student{}, &models.Student{})
+	err = db.AutoMigrate(&models.Student{}, &models.Teacher{})
 
 	if err != nil {
-		defer logrus.Error("Database migration failed")
+		defer logrus.Info("Database migration failed")
 		logrus.Fatal(err)
 		return nil
 	}

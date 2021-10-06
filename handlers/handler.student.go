@@ -66,7 +66,15 @@ func (h *handlerStudent) CreateHandlerStudent(ctx *gin.Context) {
  */
 
 func (h *handlerStudent) ResultsHadlerStudent(ctx *gin.Context) {
-	ctx.JSON(http.StatusOK, gin.H{"data": "hello wordl"})
+	res, errorCode := h.service.ResultsServiceStudent()
+
+	switch errorCode {
+	case 404:
+		ctx.AbortWithStatusJSON(http.StatusNotFound, gin.H{"message": "Student data not found"})
+		return
+	default:
+		ctx.JSON(http.StatusOK, gin.H{"message": "Already Ok", "data": res})
+	}
 }
 
 /**

@@ -94,9 +94,9 @@ func (r *repositoryStudent) ResultsRepositoryStudent() (*models.Student, interfa
 
 	db := r.db.Model(&students).Begin()
 
-	checkStudent := db.Debug().Select("*").Take(&students)
+	checkStudent := db.Debug().Select("*").Find(&students)
 
-	if checkStudent.RowsAffected > 0 {
+	if checkStudent.RowsAffected < 1 {
 		defer logrus.Error(checkStudent.Error)
 		errorCode <- http.StatusNotFound
 		return &students, <-errorCode

@@ -9,18 +9,38 @@ import (
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 
-	"mahasiswa/helpers"
 	"mahasiswa/models"
+	"mahasiswa/pkg"
 	"mahasiswa/routes"
 )
 
 func main() {
 
+	/**
+	* ========================
+	*  Setup Application
+	* ========================
+	 */
+
 	db := setupDatabase()
 	app := setupApp()
-	routes.InitializeRouteStudent(db, app)
 
-	err := app.Run(":" + helpers.GodotEnv("PORT"))
+	/**
+	* ========================
+	* Initialize All Route
+	* ========================
+	 */
+
+	routes.InitializeRouteStudent(db, app)
+	routes.InitializeRouteTeacher(db, app)
+
+	/**
+	* ========================
+	*  Listening Server Port
+	* ========================
+	 */
+
+	err := app.Run(":" + pkg.GodotEnv("PORT"))
 
 	if err != nil {
 		defer logrus.Error("Server is not running")
@@ -35,7 +55,7 @@ func main() {
  */
 
 func setupDatabase() *gorm.DB {
-	db, err := gorm.Open(postgres.Open(helpers.GodotEnv("PG_URI")), &gorm.Config{})
+	db, err := gorm.Open(postgres.Open(pkg.GodotEnv("PG_URI")), &gorm.Config{})
 
 	if err != nil {
 		defer logrus.Error("Database connection failed")
@@ -43,7 +63,7 @@ func setupDatabase() *gorm.DB {
 		return nil
 	}
 
-	err = db.AutoMigrate(&models.EntityStudent{}, &models.EntityTeacher{})
+	err = db.AutoMigrate(&models.Student{}, &models.Student{})
 
 	if err != nil {
 		defer logrus.Error("Database migration failed")
@@ -64,7 +84,7 @@ func setupApp() *gin.Engine {
 
 	app := gin.Default()
 
-	if helpers.GodotEnv("GO_ENV") != "development" {
+	if pkg.GodotEnv("GO_ENV") != "development" {
 		gin.SetMode(gin.ReleaseMode)
 	} else {
 		gin.SetMode(gin.DebugMode)

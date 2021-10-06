@@ -1,7 +1,9 @@
-package controllers
+package services
 
 import (
 	"mahasiswa/models"
+	"mahasiswa/repositorys"
+	"mahasiswa/schemas"
 )
 
 /**
@@ -10,12 +12,12 @@ import (
 * =======================================
  */
 
-type Service interface {
-	CreateServiceTeacher(input *InputTeacher) (*models.EntityTeacher, interface{})
-	ResultsServiceTeacher() (*models.EntityTeacher, interface{})
-	ResultServiceTeacher(input *InputTeacher) (*models.EntityTeacher, interface{})
-	DeleteServiceTeacher(input *InputTeacher) (*models.EntityTeacher, interface{})
-	UpdateServiceTeacher(input *InputTeacher) (*models.EntityTeacher, interface{})
+type ServiceTeacher interface {
+	CreateServiceTeacher(input *schemas.Teacher) (*models.Teacher, interface{})
+	ResultsServiceTeacher() (*models.Teacher, interface{})
+	ResultServiceTeacher(input *schemas.Teacher) (*models.Teacher, interface{})
+	DeleteServiceTeacher(input *schemas.Teacher) (*models.Teacher, interface{})
+	UpdateServiceTeacher(input *schemas.Teacher) (*models.Teacher, interface{})
 }
 
 /**
@@ -24,8 +26,8 @@ type Service interface {
 * =======================================
  */
 
-type service struct {
-	repository Repository
+type serviceTeacher struct {
+	repository repositorys.Repository
 }
 
 /**
@@ -34,8 +36,8 @@ type service struct {
 * ============================
  */
 
-func NewServiceTeacher(repository Repository) *service {
-	return &service{repository: repository}
+func NewServiceTeacher(repository repositorys.Repository) *serviceTeacher {
+	return &serviceTeacher{repository: repository}
 }
 
 /**
@@ -44,7 +46,7 @@ func NewServiceTeacher(repository Repository) *service {
 * ========================
  */
 
-func (s *service) CreateServiceTeacher(input *InputTeacher) (*models.EntityTeacher, interface{}) {
+func (s *serviceTeacher) CreateServiceTeacher(input *schemas.Teacher) (*models.Teacher, interface{}) {
 	res, err := s.repository.CreateRepositoryTeacher(input)
 	return res, err
 }
@@ -55,7 +57,7 @@ func (s *service) CreateServiceTeacher(input *InputTeacher) (*models.EntityTeach
 * ========================
  */
 
-func (s *service) ResultsServiceTeacher() (*models.EntityTeacher, interface{}) {
+func (s *serviceTeacher) ResultsServiceTeacher() (*models.Teacher, interface{}) {
 	res, err := s.repository.ResultsRepositoryTeacher()
 	return res, err
 }
@@ -66,7 +68,7 @@ func (s *service) ResultsServiceTeacher() (*models.EntityTeacher, interface{}) {
 * ========================
  */
 
-func (s *service) ResultServiceTeacher(input *InputTeacher) (*models.EntityTeacher, interface{}) {
+func (s *serviceTeacher) ResultServiceTeacher(input *schemas.Teacher) (*models.Teacher, interface{}) {
 	res, err := s.repository.ResultRepositoryTeacher(input)
 	return res, err
 }
@@ -77,7 +79,7 @@ func (s *service) ResultServiceTeacher(input *InputTeacher) (*models.EntityTeach
 * ========================
  */
 
-func (s *service) DeleteServiceTeacher(input *InputTeacher) (*models.EntityTeacher, interface{}) {
+func (s *serviceTeacher) DeleteServiceTeacher(input *schemas.Teacher) (*models.Teacher, interface{}) {
 	res, err := s.repository.DeleteRepositoryTeacher(input)
 	return res, err
 }
@@ -88,7 +90,7 @@ func (s *service) DeleteServiceTeacher(input *InputTeacher) (*models.EntityTeach
 * ========================
  */
 
-func (s *service) UpdateServiceTeacher(input *InputTeacher) (*models.EntityTeacher, interface{}) {
+func (s *serviceTeacher) UpdateServiceTeacher(input *schemas.Teacher) (*models.Teacher, interface{}) {
 	res, err := s.repository.UpdateRepositoryTeacher(input)
 	return res, err
 }

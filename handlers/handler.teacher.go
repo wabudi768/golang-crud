@@ -3,7 +3,7 @@ package handlers
 import (
 	"github.com/gin-gonic/gin"
 
-	controllers "mahasiswa/controllers/teacher"
+	"mahasiswa/services"
 )
 
 /**
@@ -13,7 +13,7 @@ import (
  */
 
 type handlerTeacher struct {
-	service controllers.Service
+	service services.ServiceTeacher
 }
 
 /**
@@ -22,7 +22,7 @@ type handlerTeacher struct {
 * ============================
  */
 
-func NewHandlerTeacher(service controllers.Service) *handlerTeacher {
+func NewHandlerTeacher(service services.ServiceTeacher) *handlerTeacher {
 	return &handlerTeacher{service: service}
 }
 

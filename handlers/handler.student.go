@@ -1,9 +1,12 @@
 package handlers
 
 import (
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 
-	controllers "mahasiswa/controllers/student"
+	"mahasiswa/schemas"
+	"mahasiswa/services"
 )
 
 /**
@@ -13,7 +16,7 @@ import (
  */
 
 type handlerStudent struct {
-	service controllers.Service
+	service services.ServiceStudent
 }
 
 /**
@@ -22,7 +25,7 @@ type handlerStudent struct {
 * ============================
  */
 
-func NewHandlerStudent(service controllers.Service) *handlerStudent {
+func NewHandlerStudent(service services.ServiceStudent) *handlerStudent {
 	return &handlerStudent{service: service}
 }
 
@@ -32,7 +35,29 @@ func NewHandlerStudent(service controllers.Service) *handlerStudent {
 * ========================
  */
 
-func (h *handlerStudent) CreateHandlerStudent(ctx *gin.Context) {}
+func (h *handlerStudent) CreateHandlerStudent(ctx *gin.Context) {
+	var input schemas.Student
+
+	err := ctx.ShouldBindJSON(&input)
+
+	if err != nil {
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"message": "parse json data failed"})
+		return
+	}
+
+	res, errorCode := h.service.CreateServiceStudent(&input)
+
+	switch errorCode {
+	case 409:
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"message": "Npm already taken", "data": nil})
+		return
+	case 403:
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"message": "Create new student failed", "data": nil})
+		return
+	default:
+		ctx.JSON(http.StatusOK, gin.H{"message": "Create new student success", "data": res})
+	}
+}
 
 /**
 * ========================
@@ -40,7 +65,9 @@ func (h *handlerStudent) CreateHandlerStudent(ctx *gin.Context) {}
 * ========================
  */
 
-func (h *handlerStudent) ResultsHadlerStudent(ctx *gin.Context) {}
+func (h *handlerStudent) ResultsHadlerStudent(ctx *gin.Context) {
+	ctx.JSON(http.StatusOK, gin.H{"data": "hello wordl"})
+}
 
 /**
 * ========================

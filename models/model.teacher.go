@@ -4,19 +4,18 @@ import (
 	"time"
 )
 
-type EntityTeacher struct {
-	ID        int             `gorm:"primary_key:auto_increment:unique"`
-	Name      string          `gorm:"type:varchar; not null"`
-	Matkul    string          `gorm:"type:varchar; not null"`
-	Students  []EntityStudent `gorm:"foreignkey:TeacherID"`
+type Teacher struct {
+	ID        uint   `gorm:"primary_key:auto_increment:unique"`
+	Name      string `gorm:"type:varchar; not null"`
+	Matkul    string `gorm:"type:varchar; not null"`
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }
 
-func (m *EntityTeacher) BeforeCreate() {
+func (m *Teacher) BeforeCreate() {
 	m.CreatedAt = time.Now().Local()
 }
 
-func (m *EntityTeacher) BeforeUpdate() {
+func (m *Teacher) BeforeUpdate() {
 	m.UpdatedAt = time.Now().Local()
 }

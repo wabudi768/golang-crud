@@ -84,7 +84,21 @@ func (h *handlerStudent) ResultsHadlerStudent(ctx *gin.Context) {
 * ========================
  */
 
-func (h *handlerStudent) ResultHandlerStudent(ctx *gin.Context) {}
+func (h *handlerStudent) ResultHandlerStudent(ctx *gin.Context) {
+
+	var input schemas.Student
+	input.ID = ctx.Param("id")
+
+	res, errorCode := h.service.ResultServiceStudent(&input)
+
+	switch errorCode {
+	case 404:
+		helpers.APIErrorResponse(ctx, http.StatusNotFound, "Student data not found", res)
+		return
+	default:
+		helpers.APISuccessResponse(ctx, http.StatusOK, "Already OK", res)
+	}
+}
 
 /**
 * ========================
@@ -92,7 +106,23 @@ func (h *handlerStudent) ResultHandlerStudent(ctx *gin.Context) {}
 * ========================
  */
 
-func (h *handlerStudent) DeleteHandlerStudent(ctx *gin.Context) {}
+func (h *handlerStudent) DeleteHandlerStudent(ctx *gin.Context) {
+	var input schemas.Student
+	input.ID = ctx.Param("id")
+
+	res, err := h.service.DeleteServiceStudent(&input)
+
+	switch err {
+	case 404:
+		helpers.APIErrorResponse(ctx, http.StatusNotFound, "StudentId is not exist", res)
+		return
+	case 403:
+		helpers.APIErrorResponse(ctx, http.StatusForbidden, "Delete student data failed", res)
+		return
+	default:
+		helpers.APISuccessResponse(ctx, http.StatusOK, "Delete student data success", nil)
+	}
+}
 
 /**
 * ========================

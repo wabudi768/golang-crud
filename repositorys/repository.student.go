@@ -56,13 +56,13 @@ func (r *repositoryStudent) CreateRepositoryStudent(input *schemas.Student) (*mo
 	student.Npm = input.Npm
 	student.Fak = input.Fak
 	student.Bid = input.Bid
-	student.Teachers = input.Teachers
+	// student.Teachers = input.Teachers
 
 	errorCode := make(chan int, 1)
 
 	db := r.db.Model(&student).Begin()
 
-	checkStudentNpm := db.Debug().Select("npm").Where("npm = ?", student.Npm).Find(&student)
+	checkStudentNpm := db.Debug().First(&student, "npm = ?", student.Npm)
 
 	if checkStudentNpm.RowsAffected > 0 {
 		defer logrus.Error(checkStudentNpm.Error)
@@ -70,7 +70,7 @@ func (r *repositoryStudent) CreateRepositoryStudent(input *schemas.Student) (*mo
 		return &student, <-errorCode
 	}
 
-	saveStudent := db.Debug().Create(&student).Commit().First(&student)
+	saveStudent := db.Debug().Create(&student).Commit()
 
 	if saveStudent.RowsAffected < 1 {
 		defer logrus.Error(saveStudent.Error)
@@ -94,7 +94,7 @@ func (r *repositoryStudent) ResultsRepositoryStudent() (*[]models.Student, inter
 
 	db := r.db.Model(&students).Begin()
 
-	checkStudent := db.Debug().Select("*").Find(&students)
+	checkStudent := db.Debug().Find(&students)
 
 	if checkStudent.RowsAffected < 1 {
 		defer logrus.Error(checkStudent.Error)
@@ -119,7 +119,7 @@ func (r *repositoryStudent) ResultRepositoryStudent(input *schemas.Student) (*mo
 
 	db := r.db.Model(&student).Begin()
 
-	checkStudentById := db.Debug().Select("*").Where("id = ?", student.ID).Take(&student)
+	checkStudentById := db.Debug().First(&student)
 
 	if checkStudentById.RowsAffected < 1 {
 		defer logrus.Error(checkStudentById.Error)
@@ -127,7 +127,7 @@ func (r *repositoryStudent) ResultRepositoryStudent(input *schemas.Student) (*mo
 		return &student, <-errorCode
 	}
 
-	return &student, errorCode
+	return &student, nil
 }
 
 /**
@@ -144,7 +144,7 @@ func (r *repositoryStudent) DeleteRepositoryStudent(input *schemas.Student) (*mo
 
 	db := r.db.Model(&student).Begin()
 
-	checkStudentById := db.Debug().Select("*").Where("id = ?", student.ID).Take(&student)
+	checkStudentById := db.Debug().First(&student)
 
 	if checkStudentById.RowsAffected < 1 {
 		defer logrus.Error(checkStudentById.Error)
@@ -152,7 +152,7 @@ func (r *repositoryStudent) DeleteRepositoryStudent(input *schemas.Student) (*mo
 		return &student, <-errorCode
 	}
 
-	deleteStudentById := db.Debug().Select("*").Where("id = ?", student.ID).Delete(&student)
+	deleteStudentById := db.Debug().Delete(&student)
 
 	if deleteStudentById.RowsAffected < 1 {
 		defer logrus.Error(deleteStudentById.Error)
@@ -160,7 +160,7 @@ func (r *repositoryStudent) DeleteRepositoryStudent(input *schemas.Student) (*mo
 		return &student, <-errorCode
 	}
 
-	return &student, errorCode
+	return &student, nil
 }
 
 /**
@@ -176,7 +176,7 @@ func (r *repositoryStudent) UpdateRepositoryStudent(input *schemas.Student) (*mo
 	student.Npm = input.Npm
 	student.Fak = input.Fak
 	student.Bid = input.Bid
-	student.Teachers = input.Teachers
+	// student.Teachers = input.Teachers
 
 	errorCode := make(chan int, 1)
 
@@ -190,7 +190,7 @@ func (r *repositoryStudent) UpdateRepositoryStudent(input *schemas.Student) (*mo
 		return &student, <-errorCode
 	}
 
-	updateStudent := db.Debug().Select("*").Where("id = ?", input.ID).Updates(&student)
+	updateStudent := db.Debug().Updates(&student)
 
 	if updateStudent.RowsAffected < 1 {
 		defer logrus.Error(updateStudent.Error)

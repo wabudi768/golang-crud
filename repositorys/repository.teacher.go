@@ -19,7 +19,7 @@ import (
 
 type Repository interface {
 	CreateRepositoryTeacher(input *schemas.Teacher) (*models.Teacher, interface{})
-	ResultsRepositoryTeacher() (*models.Teacher, interface{})
+	ResultsRepositoryTeacher() (*[]models.Teacher, interface{})
 	ResultRepositoryTeacher(input *schemas.Teacher) (*models.Teacher, interface{})
 	DeleteRepositoryTeacher(input *schemas.Teacher) (*models.Teacher, interface{})
 	UpdateRepositoryTeacher(input *schemas.Teacher) (*models.Teacher, interface{})
@@ -86,14 +86,14 @@ func (r *repositoryTeacher) CreateRepositoryTeacher(input *schemas.Teacher) (*mo
 * ========================
  */
 
-func (r *repositoryTeacher) ResultsRepositoryTeacher() (*models.Teacher, interface{}) {
-	var teachers models.Teacher
+func (r *repositoryTeacher) ResultsRepositoryTeacher() (*[]models.Teacher, interface{}) {
+	var teachers []models.Teacher
 
 	errorCode := make(chan int, 1)
 
 	db := r.db.Model(&teachers).Begin()
 
-	checkTeacher := db.Debug().Select("*").Take(&teachers)
+	checkTeacher := db.Debug().Select("*").Find(&teachers)
 
 	if checkTeacher.RowsAffected > 0 {
 		defer logrus.Error(checkTeacher.Error)
@@ -118,7 +118,7 @@ func (r *repositoryTeacher) ResultRepositoryTeacher(input *schemas.Teacher) (*mo
 
 	db := r.db.Model(&teacher).Begin()
 
-	checkTeacherById := db.Debug().Select("*").Where("id = ?", teacher.ID).Take(&teacher)
+	checkTeacherById := db.Debug().Select("*").Where("id = ?", teacher.ID).First(&teacher)
 
 	if checkTeacherById.RowsAffected < 1 {
 		defer logrus.Error(checkTeacherById.Error)

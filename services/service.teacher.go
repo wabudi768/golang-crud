@@ -14,7 +14,7 @@ import (
 
 type ServiceTeacher interface {
 	CreateServiceTeacher(input *schemas.Teacher) (*models.Teacher, interface{})
-	ResultsServiceTeacher() (*models.Teacher, interface{})
+	ResultsServiceTeacher() (*[]models.Teacher, interface{})
 	ResultServiceTeacher(input *schemas.Teacher) (*models.Teacher, interface{})
 	DeleteServiceTeacher(input *schemas.Teacher) (*models.Teacher, interface{})
 	UpdateServiceTeacher(input *schemas.Teacher) (*models.Teacher, interface{})
@@ -61,7 +61,7 @@ func (s *serviceTeacher) CreateServiceTeacher(input *schemas.Teacher) (*models.T
 * ========================
  */
 
-func (s *serviceTeacher) ResultsServiceTeacher() (*models.Teacher, interface{}) {
+func (s *serviceTeacher) ResultsServiceTeacher() (*[]models.Teacher, interface{}) {
 	res, err := s.repository.ResultsRepositoryTeacher()
 	return res, err
 }

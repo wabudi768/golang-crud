@@ -3,25 +3,28 @@ package models
 import (
 	"time"
 
-	"github.com/lib/pq"
+	"github.com/google/uuid"
+	"gorm.io/gorm"
 )
 
 type Student struct {
-	ID        uint          `json:"id" gorm:"primary_key:auto_increment"`
-	Name      string        `json:"name" gorm:"type:varchar;not null"`
-	Npm       uint64        `json:"npm" gorm:"type:bigint;not null"`
-	Fak       string        `json:"fak" gorm:"type:varchar;not null"`
-	Bid       string        `json:"bid" gorm:"type:varchar;not null"`
-	Teachers  pq.Int32Array `json:"teachers" gorm:"type:text[]"`
-	CreatedAt time.Time     `json:"created_at" gorm:"type:timestampz"`
-	UpdatedAt time.Time     `json:"updated_at" gorm:"type:timestampz"`
-	DeletedAt time.Time     `json:"deleted_at" gorm:"type:timestampz"`
+	ID   string `json:"id" gorm:"primary_key"`
+	Name string `json:"name" gorm:"type:varchar;not null"`
+	Npm  uint64 `json:"npm" gorm:"type:bigint;not null"`
+	Fak  string `json:"fak" gorm:"type:varchar;not null"`
+	Bid  string `json:"bid" gorm:"type:varchar;not null"`
+	// Teachers  pq.StringArray `json:"teachers" gorm:"type:text[];constraint:onupdate:cascade,ondelete:cascade"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
 }
 
-func (m *Student) BeforeCreate() {
-	m.CreatedAt = time.Now().Local()
+func (entity *Student) BeforeCreate(db *gorm.DB) error {
+	entity.ID = uuid.New().String()
+	entity.CreatedAt = time.Now().Local()
+	return nil
 }
 
-func (m *Student) BeforeUpdate() {
-	m.UpdatedAt = time.Now().Local()
+func (entity *Student) BeforeUpdate(db *gorm.DB) error {
+	entity.UpdatedAt = time.Now().Local()
+	return nil
 }

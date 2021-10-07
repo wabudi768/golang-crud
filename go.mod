@@ -8,6 +8,7 @@ require (
 	github.com/gin-contrib/gzip v0.0.3
 	github.com/gin-gonic/gin v1.7.4
 	github.com/go-playground/validator/v10 v10.5.0 // indirect
+	github.com/google/uuid v1.3.0 // indirect
 	github.com/joho/godotenv v1.4.0
 	github.com/leodido/go-urn v1.2.1 // indirect
 	github.com/lib/pq v1.10.3 // indirect

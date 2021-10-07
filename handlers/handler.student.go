@@ -42,13 +42,13 @@ func (h *handlerStudent) CreateHandlerStudent(ctx *gin.Context) {
 	err := ctx.ShouldBindJSON(&input)
 
 	if err != nil {
-		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"message": "parse json data failed"})
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"message": "Parse json data failed"})
 		return
 	}
 
-	res, errorCode := h.service.CreateServiceStudent(&input)
+	res, error := h.service.CreateServiceStudent(&input)
 
-	switch errorCode {
+	switch error {
 	case 409:
 		helpers.APIErrorResponse(ctx, http.StatusConflict, "Npm already taken", res)
 		return
@@ -67,9 +67,9 @@ func (h *handlerStudent) CreateHandlerStudent(ctx *gin.Context) {
  */
 
 func (h *handlerStudent) ResultsHadlerStudent(ctx *gin.Context) {
-	res, errorCode := h.service.ResultsServiceStudent()
+	res, error := h.service.ResultsServiceStudent()
 
-	switch errorCode {
+	switch error {
 	case 404:
 		helpers.APIErrorResponse(ctx, http.StatusNotFound, "Student data not found", res)
 		return
@@ -89,9 +89,9 @@ func (h *handlerStudent) ResultHandlerStudent(ctx *gin.Context) {
 	var input schemas.Student
 	input.ID = ctx.Param("id")
 
-	res, errorCode := h.service.ResultServiceStudent(&input)
+	res, error := h.service.ResultServiceStudent(&input)
 
-	switch errorCode {
+	switch error {
 	case 404:
 		helpers.APIErrorResponse(ctx, http.StatusNotFound, "Student data not found", res)
 		return
@@ -110,9 +110,9 @@ func (h *handlerStudent) DeleteHandlerStudent(ctx *gin.Context) {
 	var input schemas.Student
 	input.ID = ctx.Param("id")
 
-	res, err := h.service.DeleteServiceStudent(&input)
+	res, error := h.service.DeleteServiceStudent(&input)
 
-	switch err {
+	switch error {
 	case 404:
 		helpers.APIErrorResponse(ctx, http.StatusNotFound, "StudentId is not exist", res)
 		return
@@ -130,4 +130,27 @@ func (h *handlerStudent) DeleteHandlerStudent(ctx *gin.Context) {
 * ========================
  */
 
-func (h *handlerStudent) UpdateHandlerStudent(ctx *gin.Context) {}
+func (h *handlerStudent) UpdateHandlerStudent(ctx *gin.Context) {
+	var input schemas.Student
+	input.ID = ctx.Param("id")
+
+	err := ctx.ShouldBindJSON(&input)
+
+	if err != nil {
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"message": "Parse json data failed"})
+		return
+	}
+
+	res, error := h.service.UpdateServiceStudent(&input)
+
+	switch error {
+	case 404:
+		helpers.APIErrorResponse(ctx, http.StatusNotFound, "StudentId is not exist", res)
+		return
+	case 403:
+		helpers.APIErrorResponse(ctx, http.StatusForbidden, "Update new student failed", res)
+		return
+	default:
+		helpers.APISuccessResponse(ctx, http.StatusOK, "Update new student success", nil)
+	}
+}

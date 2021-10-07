@@ -52,7 +52,7 @@ func (s *serviceStudent) CreateServiceStudent(input *schemas.Student) (*models.S
 	student.Npm = input.Npm
 	student.Fak = input.Fak
 	student.Bid = input.Bid
-	// student.Teachers = input.Teachers
+	student.Teachers = input.Teachers
 
 	res, err := s.repository.CreateRepositoryStudent(&student)
 	return res, err
